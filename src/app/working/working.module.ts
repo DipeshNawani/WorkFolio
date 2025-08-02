@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LogTaskComponent } from './log-task/log-task.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -13,7 +14,9 @@ import { AnalyticsComponent } from './analytics/analytics.component';
     AnalyticsComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class WorkingModule { }

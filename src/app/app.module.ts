@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './landing/landing.component';
-import { AuthModule } from './auth/auth.module';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AdminAuthModule } from './admin-auth/admin-auth.module';
 
+import { AuthModule } from './auth/auth.module';
+import { AdminAuthModule } from './admin-auth/admin-auth.module';
+import { WorkingModule } from './working/working.module';
 
 @NgModule({
   declarations: [
@@ -17,10 +18,10 @@ import { AdminAuthModule } from './admin-auth/admin-auth.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AuthModule,
     ReactiveFormsModule,
-    AdminAuthModule
-
+    AuthModule,
+    AdminAuthModule,
+    WorkingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

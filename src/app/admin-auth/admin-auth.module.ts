@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login/login.component'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
+import { AdminSignInComponent } from './admin-sign-in/admin-sign-in.component';
+
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [
+    AdminSignInComponent,
+    
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -13,4 +17,3 @@ import { RouterModule } from '@angular/router';
   ]
 })
 export class AdminAuthModule { }
-
