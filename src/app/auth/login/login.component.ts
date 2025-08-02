@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,27 +12,38 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  returnUrl: string = '/dashboard';
+
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
-  onLogin() {
-    const { email, password } = this.loginForm.value;
-    const storedUser = localStorage.getItem('userData');
+  ngOnInit() {
+    // Get return url from route parameters or default to '/dashboard'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+  }
 
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      if (user.email === email && user.password === password) {
-        alert('Login successful!');
-        this.router.navigate(['/dashboard']); // Change this to your main app route
-      } else {
-        this.errorMessage = 'Invalid email or password.';
-      }
+  onLogin() {
+    if (this.loginForm.invalid) {
+      return;
+    }
+    
+    const { email, password } = this.loginForm.value;
+    
+    if (this.authService.login(email, password)) {
+      // Login successful
+      this.router.navigateByUrl(this.returnUrl);
     } else {
-      this.errorMessage = 'No user found. Please register first.';
+      // Login failed
+      this.errorMessage = 'Invalid email or password or no user found. Please register first.';
     }
   }
 
