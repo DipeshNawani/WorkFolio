@@ -10,7 +10,6 @@ export class DashboardComponent {
   totalHours: number = 0.0;
   activeSubjects: number = 0;
   
-  
   constructor() {}
 
   logFirstTask() {
