@@ -9,7 +9,7 @@ import { AdminSignInComponent } from './admin-auth/admin-sign-in/admin-sign-in.c
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'admin/login', component: AdminSignInComponent },
+  { path: 'admin-sign-in', component: AdminSignInComponent },
   { path: 'log-task', component: LogTaskComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
