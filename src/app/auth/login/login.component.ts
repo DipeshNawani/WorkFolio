@@ -26,7 +26,8 @@ export class LoginComponent {
       const user = JSON.parse(storedUser);
       if (user.email === email && user.password === password) {
         alert('Login successful!');
-        this.router.navigate(['/dashboard']); // Change this to your main app route
+        localStorage.setItem('loggedInUsername', user.name); // ✅ Save name for display
+        this.router.navigate(['/landing']);
       } else {
         this.errorMessage = 'Invalid email or password.';
       }
