@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-work',
@@ -7,4 +8,19 @@ import { Component } from '@angular/core';
 })
 export class AdminWorkComponent {
 
+  constructor(private router: Router) {}
+
+  // goToSalary(): void {
+  //   this.router.navigate(['/admin/salary']);
+  // }
+
+  goToSalary(): void {
+  console.log('Navigating to salary');
+  this.router.navigate(['/admin/salary']);
+}
+
+
+  goToReport(): void {
+    this.router.navigate(['/admin/report']);
+  }
 }

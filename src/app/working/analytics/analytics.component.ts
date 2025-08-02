@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DashboardService } from '../../working/services/dashboard.services';
 
 @Component({
   selector: 'app-analytics',
@@ -6,21 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./analytics.component.css']
 })
 export class AnalyticsComponent implements OnInit {
-
-  totalTasks: number = 0;
+  subjects: { name: string; hours: number }[] = [];
   totalHours: number = 0;
-  activeSubjects: number = 0;
 
-  constructor() { }
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
-    this.fetchAnalyticsData();
-  }
-
-  fetchAnalyticsData(): void {
-    // Mock values (replace with actual service call in future)
-    this.totalTasks = 12;
-    this.totalHours = 34.5;
-    this.activeSubjects = 4;
+    this.dashboardService.subjectData$.subscribe((data) => {
+      this.subjects = data;
+      this.totalHours = this.subjects.reduce((sum, s) => sum + s.hours, 0);
+    });
   }
 }

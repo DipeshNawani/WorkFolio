@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { LogTaskComponent } from './log-task/log-task.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
-import { RouterModule } from '@angular/router';
+import { DashboardComponent } from './dashboard/dashboard.component'; // ✅ Add this if it's missing
 
 @NgModule({
   declarations: [
@@ -16,12 +16,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
-  ],
-  exports: [
-    DashboardComponent,
-    LogTaskComponent,
-    AnalyticsComponent
+    RouterModule
   ]
 })
 export class WorkingModule { }

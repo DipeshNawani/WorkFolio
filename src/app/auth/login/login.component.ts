@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,30 +11,52 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
+  returnUrl: string = '/dashboard';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
-  onLogin() {
-    const { email, password } = this.loginForm.value;
-    const storedUser = localStorage.getItem('userData');
+  ngOnInit() {
+    // Get return url from route parameters or default to '/dashboard'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+  }
 
+  onLogin() {
+    if (this.loginForm.invalid) return;
+
+    const { email, password } = this.loginForm.value;
+
+    // First, try login via AuthService
+    const loginSuccess = this.authService.login(email, password);
+
+    if (loginSuccess) {
+      this.router.navigateByUrl(this.returnUrl);
+      return;
+    }
+
+    // Fallback: Try localStorage check
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const user = JSON.parse(storedUser);
       if (user.email === email && user.password === password) {
         alert('Login successful!');
-        localStorage.setItem('loggedInUsername', user.name); // ✅ Save name for display
+        localStorage.setItem('loggedInUsername', user.name);
         this.router.navigate(['/landing']);
-      } else {
-        this.errorMessage = 'Invalid email or password.';
+        return;
       }
-    } else {
-      this.errorMessage = 'No user found. Please register first.';
     }
+
+    // Login failed
+    this.errorMessage = 'Invalid email or password or no user found. Please register first.';
   }
 
   goToRegister() {
