@@ -1,3 +1,5 @@
+/* styles.css */
+
 /* Reset */
 * {
   margin: 0;
@@ -5,11 +7,24 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  color: #1e293b;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
   background-color: #f8fafc;
+  font-family: 'Segoe UI', 'Inter', sans-serif;
   line-height: 1.6;
+  padding: 0.5rem; /* Prevents clipped corners */
+  color: #1e293b;
+}
+
+/* Root and App Layout */
+app-root,
+app-dashboard {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* Navbar */
