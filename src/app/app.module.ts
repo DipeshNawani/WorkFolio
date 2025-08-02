@@ -1,21 +1,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LandingComponent } from './landing/landing.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AdminLookupModule } from './admin-lookup/admin-lookup.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LandingComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AdminLookupModule,
+    HttpClientModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
