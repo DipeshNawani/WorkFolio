@@ -1,1 +1,18 @@
-<p>login works!</p>
+<div class="auth-container">
+  <h2>Login to Workfolio</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <label>Email</label>
+    <input type="email" formControlName="email" placeholder="Enter email" />
+
+    <label>Password</label>
+    <input type="password" formControlName="password" placeholder="Enter password" />
+
+    <button type="submit">Login</button>
+  </form>
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div class="auth-links">
+    <a (click)="forgotPassword()">Forgot Password?</a>
+    <p>Don't have an account? <a (click)="goToRegister()">Sign Up</a></p>
+  </div>
+</div>

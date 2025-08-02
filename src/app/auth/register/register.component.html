@@ -1,1 +1,29 @@
-<p>register works!</p>
+<div class="auth-container">
+  <h2>Create Your Workfolio Account</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+    <label>First Name</label>
+    <input type="text" formControlName="fname" />
+
+    <label>Last Name</label>
+    <input type="text" formControlName="lname" />
+
+    <label>University/Institution</label>
+    <input type="text" formControlName="university" />
+
+    <label>Department</label>
+    <input type="text" formControlName="department" />
+
+    <label>Email</label>
+    <input type="email" formControlName="email" />
+
+    <label>Password</label>
+    <input type="password" formControlName="password" />
+
+    <label>Confirm Password</label>
+    <input type="password" formControlName="confirmPassword" />
+
+    <button type="submit">Register</button>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  </form>
+</div>
