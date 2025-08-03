@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Task } from 'src/app/log-task/task';
+import { LogTaskService, Task } from '../services/log-task.service';
 
 @Component({
   selector: 'app-log-task',
@@ -7,20 +7,18 @@ import { Task } from 'src/app/log-task/task';
   styleUrls: ['./log-task.component.css']
 })
 export class LogTaskComponent implements OnInit {
-  objectKeys = Object.keys;
+  tasks: Task[] = [];
   task: Task = {
     subject: '',
-    workType: 'Lecture',
+    workType: '',
     hours: 0,
     date: '',
     description: ''
   };
 
-  tasks: Task[] = [];
   totalHours: number = 0;
-  workTypeTotals: Record<string, number> = {};
-  subjectTotals: Record<string, number> = {};
-
+  workTypeTotals: { [key: string]: number } = {};
+  subjectTotals: { [key: string]: number } = {};
   filter = {
     search: '',
     subject: '',
@@ -29,39 +27,56 @@ export class LogTaskComponent implements OnInit {
     toDate: ''
   };
 
-  ngOnInit() {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      this.tasks = JSON.parse(savedTasks);
-      this.updateSummaries();
-    }
+  constructor(private logTaskService: LogTaskService) {}
+
+  ngOnInit(): void {
+    this.tasks = this.logTaskService.getTasks();
+    this.calculateSummaries();
+
+      this.tasks = this.logTaskService.getTasks();
   }
 
   addTask() {
-    if (!this.task.subject || !this.task.hours || !this.task.date || !this.task.workType) return;
+    if (!this.task.subject || !this.task.workType || !this.task.hours || !this.task.date) return;
 
-    this.tasks.push({ ...this.task });
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    this.updateSummaries();
+    const newTask = { ...this.task }; // Clone task
+    this.tasks.push(newTask);
+    this.logTaskService.setTasks(this.tasks);
+    this.resetTask();
+    this.calculateSummaries();
+  }
 
+  resetTask() {
     this.task = {
       subject: '',
-      workType: 'Lecture',
+      workType: '',
       hours: 0,
       date: '',
       description: ''
     };
   }
 
-  updateSummaries() {
-    this.totalHours = this.tasks.reduce((acc, t) => acc + t.hours, 0);
-
+  calculateSummaries() {
+    this.totalHours = 0;
     this.workTypeTotals = {};
     this.subjectTotals = {};
 
-    for (let t of this.tasks) {
-      this.workTypeTotals[t.workType] = (this.workTypeTotals[t.workType] || 0) + t.hours;
-      this.subjectTotals[t.subject] = (this.subjectTotals[t.subject] || 0) + t.hours;
+    for (const task of this.tasks) {
+      this.totalHours += task.hours;
+
+      if (!this.workTypeTotals[task.workType]) {
+        this.workTypeTotals[task.workType] = 0;
+      }
+      this.workTypeTotals[task.workType] += task.hours;
+
+      if (!this.subjectTotals[task.subject]) {
+        this.subjectTotals[task.subject] = 0;
+      }
+      this.subjectTotals[task.subject] += task.hours;
     }
+  }
+
+  objectKeys(obj: any) {
+    return Object.keys(obj);
   }
 }

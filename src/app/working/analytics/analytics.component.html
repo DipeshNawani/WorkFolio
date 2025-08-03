@@ -12,6 +12,7 @@
           <th>Subject Name</th>
           <th>Hours Studied</th>
           <th>Contribution %</th>
+          <th>Tasks Logged</th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +20,7 @@
           <td>{{ subject.name }}</td>
           <td>{{ subject.hours }}</td>
           <td>{{ ((subject.hours / totalHours) * 100) | number: '1.0-1' }}%</td>
+          <td>{{ subject.taskCount }}</td>
         </tr>
       </tbody>
     </table>

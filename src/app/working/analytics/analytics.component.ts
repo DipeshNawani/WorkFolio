@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardService } from '../../working/services/dashboard.services';
+import { LogTaskService, Task } from '../services/log-task.service';
 
 @Component({
   selector: 'app-analytics',
@@ -7,15 +7,34 @@ import { DashboardService } from '../../working/services/dashboard.services';
   styleUrls: ['./analytics.component.css']
 })
 export class AnalyticsComponent implements OnInit {
-  subjects: { name: string; hours: number }[] = [];
+  tasks: Task[] = [];
   totalHours: number = 0;
+  subjects: { name: string; hours: number; taskCount: number }[] = [];
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private logTaskService: LogTaskService) {}
 
   ngOnInit(): void {
-    this.dashboardService.subjectData$.subscribe((data) => {
-      this.subjects = data;
-      this.totalHours = this.subjects.reduce((sum, s) => sum + s.hours, 0);
-    });
+    this.tasks = this.logTaskService.getTasks();
+    this.calculateAnalytics();
+  }
+
+  calculateAnalytics(): void {
+    const subjectMap: { [key: string]: { hours: number; taskCount: number } } = {};
+
+    this.totalHours = this.tasks.reduce((sum, task) => sum + task.hours, 0);
+
+    for (let task of this.tasks) {
+      if (!subjectMap[task.subject]) {
+        subjectMap[task.subject] = { hours: 0, taskCount: 0 };
+      }
+      subjectMap[task.subject].hours += task.hours;
+      subjectMap[task.subject].taskCount += 1;
+    }
+
+    this.subjects = Object.entries(subjectMap).map(([name, data]) => ({
+      name,
+      hours: data.hours,
+      taskCount: data.taskCount,
+    }));
   }
 }

@@ -18,7 +18,6 @@ export class AuthService {
   public isAuthenticated: Observable<boolean>;
 
   constructor(private router: Router) {
-    // Initialize from localStorage if available
     const storedUser = localStorage.getItem('userData');
     this.currentUserSubject = new BehaviorSubject<User | null>(storedUser ? JSON.parse(storedUser) : null);
     this.currentUser = this.currentUserSubject.asObservable();
@@ -31,13 +30,16 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  public get isUserAuthenticated(): boolean {
+    return this.isAuthenticatedSubject.value;
+  }
+
   login(email: string, password: string): boolean {
     const storedUser = localStorage.getItem('userData');
 
     if (storedUser) {
       const user = JSON.parse(storedUser);
       if (user.email === email && user.password === password) {
-        // Update the current user subject
         this.currentUserSubject.next(user);
         this.isAuthenticatedSubject.next(true);
         return true;
@@ -47,18 +49,13 @@ export class AuthService {
   }
 
   logout(): void {
-    // Don't remove from localStorage as we need it for future logins
-    // Just update the subjects
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }
 
   register(user: User): void {
-    // Store user in localStorage
     localStorage.setItem('userData', JSON.stringify(user));
-    
-    // Update the subjects
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
   }
