@@ -2,7 +2,7 @@
 
 :host {
   font-family: 'Inter', sans-serif;
-  background-color: #f5f7fb;
+  /* background-color: #f5f7fb; */
   color: #1b2232;
   min-height: 100vh;
   padding: 2rem;

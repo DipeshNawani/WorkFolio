@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
+import { Router } from '@angular/router';
+import { TaskService, Task } from '../services/task.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,26 +13,48 @@ export class DashboardComponent implements OnInit {
   totalHours: number = 0.0;
   activeSubjects: number = 0;
   userName: string = '';
+  userProfileImage: string | null = null;
+  recentTasks: Task[] = [];
   
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private taskService: TaskService
+  ) {}
 
   logFirstTask() {
-    console.log('Log first task clicked');
+    this.router.navigate(['log-task']);
   }
 
   ngOnInit() {
     // Get user data from auth service
     const user = this.authService.currentUserValue;
-    if (user && user.name) {
-      this.userName = user.name;
-    } else if (user && user.email) {
-      // If name is not available, use email as fallback
-      this.userName = user.email.split('@')[0];
+    if (user) {
+      if (user.name) {
+        this.userName = user.name;
+      } else if (user.email) {
+        // If name is not available, use email as fallback
+        this.userName = user.email.split('@')[0];
+      }
+      
+      // Get profile image if available
+      if (user.profileImage) {
+        this.userProfileImage = user.profileImage;
+      }
     }
+
+    // Subscribe to task updates
+    this.taskService.getTasks().subscribe(tasks => {
+      const stats = this.taskService.getTaskStats();
+      this.totalTasks = stats.totalTasks;
+      this.totalHours = stats.totalHours;
+      this.activeSubjects = stats.activeSubjects;
+      this.recentTasks = stats.recentTasks;
+    });
   }
 
   navigateToTab(tab: string) {
-    console.log('Navigate to:', tab);
+    this.router.navigate([tab]);
   }
 
   logout() {

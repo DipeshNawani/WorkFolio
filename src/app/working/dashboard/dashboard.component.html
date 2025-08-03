@@ -15,6 +15,14 @@
       </div>
       <div class="header-right">
         <div class="user-profile">
+          <div class="user-avatar" *ngIf="userProfileImage" [style.backgroundImage]="'url(' + userProfileImage + ')'">
+          </div>
+          <div class="user-avatar" *ngIf="!userProfileImage">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
           <span class="user-name">Welcome, {{ userName }}</span>
           <button class="logout-btn" (click)="logout()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +45,7 @@
   </header>
 
   <nav class="navigation">
-    <div class="nav-item" routerLink="/dashboard" class="nav-item active">
+    <div class="nav-item" routerLink="/dashboard" routerLinkActive="active" (click)="navigateToTab('dashboard')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="currentColor"/>
         <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" fill="currentColor"/>
@@ -46,7 +54,7 @@
       </svg>
       Dashboard
     </div>
-    <div class="nav-item" routerLink="/log-task" routerLinkActive="active">
+    <div class="nav-item" routerLink="/log-task" routerLinkActive="active" (click)="navigateToTab('log-task')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" fill="none"/>
         <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -56,7 +64,7 @@
       </svg>
       Log Task
     </div>
-    <div class="nav-item" routerLink="/analytics" routerLinkActive="active">
+    <div class="nav-item" routerLink="/analytics" routerLinkActive="active" (click)="navigateToTab('analytics')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" stroke="currentColor" stroke-width="2" fill="none"/>
       </svg>
@@ -82,10 +90,10 @@
   <div class="recent-tasks-section">
     <div class="section-header">
       <h2>Recent Tasks</h2>
-      <span class="task-count">0 of 0 tasks</span>
+      <span class="task-count">{{ recentTasks.length }} of {{ totalTasks }} tasks</span>
     </div>
 
-    <div class="empty-state">
+    <div class="empty-state" *ngIf="recentTasks.length === 0">
       <div class="graduation-cap-icon-large">
         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 3L1 9L12 15L21 9V16H23V9L12 3Z" fill="#9ca3af"/>
@@ -96,6 +104,24 @@
       <p>Start by logging your first academic activity</p>
       <button class="log-task-btn" (click)="logFirstTask()">
         Log Your First Task
+      </button>
+    </div>
+    
+    <div class="task-list" *ngIf="recentTasks.length > 0">
+      <div class="task-item" *ngFor="let task of recentTasks">
+        <div class="task-header">
+          <h3 class="task-subject">{{ task.subject }}</h3>
+          <span class="task-type" [ngClass]="task.workType.toLowerCase()">{{ task.workType }}</span>
+        </div>
+        <div class="task-details">
+          <div class="task-date">{{ task.date | date: 'mediumDate' }}</div>
+          <div class="task-hours">{{ task.hours }}h</div>
+        </div>
+        <p class="task-description" *ngIf="task.description">{{ task.description }}</p>
+      </div>
+      
+      <button class="view-all-btn" (click)="navigateToTab('log-task')">
+        View All Tasks
       </button>
     </div>
   </div>
