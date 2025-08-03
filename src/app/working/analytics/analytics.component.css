@@ -14,13 +14,12 @@
   font-size: 1.875rem;
   font-weight: 700;
   color: #1e293b;
-  margin: 0 0 8px 0;
+  margin-bottom: 8px;
 }
 
 .analytics-header p {
   font-size: 1rem;
   color: #64748b;
-  margin: 0;
 }
 
 .analytics-container {
@@ -29,14 +28,47 @@
   margin-bottom: 24px;
 }
 
+h2 {
+  color: #00e0ff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.empty-message {
+  text-align: center;
+  font-style: italic;
+  color: #bbbbbb;
+}
+
+/* Table */
+.analytics-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.analytics-table th,
+.analytics-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+}
+
+.analytics-table th {
+  background-color: #2c2c2c;
+  color: #00e0ff;
+}
+
+/* Card */
 .analytics-card {
   background: white;
   border-radius: 0.5rem;
   padding: 20px;
   flex: 1;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  margin: 1rem 0;
 }
 
 .analytics-card:hover {
@@ -73,7 +105,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #1e293b;
-  margin: 0 0 16px 0;
+  margin-bottom: 16px;
 }
 
 .progress-container {
@@ -102,7 +134,7 @@
   color: #64748b;
 }
 
-/* Charts Container */
+/* Charts Section */
 .charts-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -121,7 +153,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #1e293b;
-  margin: 0 0 16px 0;
+  margin-bottom: 16px;
 }
 
 .chart-container {
@@ -198,7 +230,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #1e293b;
-  margin: 0 0 16px 0;
+  margin-bottom: 16px;
 }
 
 .activity-list {
@@ -295,22 +327,22 @@
   border-radius: 0.5rem;
 }
 
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 768px) {
   .analytics-container {
     flex-direction: column;
     gap: 16px;
   }
-  
+
   .charts-container {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .chart-bar {
     width: 30px;
   }
-  
+
   .activity-item {
     padding: 12px;
   }

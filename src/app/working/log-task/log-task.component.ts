@@ -7,11 +7,18 @@ import { TaskService, Task } from '../services/task.service';
   styleUrls: ['./log-task.component.css']
 })
 export class LogTaskComponent implements OnInit {
-  Object = Object;
-
-  task: Task = { subject: '', workType: '', hours: 0, date: '', description: '' };
   tasks: Task[] = [];
+  task: Task = {
+    subject: '',
+    workType: '',
+    hours: 0,
+    date: '',
+    description: ''
+  };
 
+  totalHours: number = 0;
+  workTypeTotals: { [key: string]: number } = {};
+  subjectTotals: { [key: string]: number } = {};
   filter = {
     search: '',
     subject: '',
@@ -22,40 +29,47 @@ export class LogTaskComponent implements OnInit {
 
   constructor(private taskService: TaskService) {}
 
-  ngOnInit() {
-    // Subscribe to task updates
+  ngOnInit(): void {
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;
+      this.calculateSummaries();
     });
   }
 
-  get totalHours() {
-    return this.tasks.reduce((sum, t) => sum + t.hours, 0);
-  }
-
-  get workTypeTotals() {
-    const totals: { [type: string]: number } = {};
-    for (let task of this.tasks) {
-      totals[task.workType] = (totals[task.workType] || 0) + task.hours;
-    }
-    return totals;
-  }
-
-  get subjectTotals() {
-    const totals: { [subject: string]: number } = {};
-    for (let task of this.tasks) {
-      totals[task.subject] = (totals[task.subject] || 0) + task.hours;
-    }
-    return totals;
-  }
-
-  addTask() {
+  addTask(): void {
     if (!this.task.subject || !this.task.workType || !this.task.hours || !this.task.date) return;
-    
-    // Use the task service to add the task
+
     this.taskService.addTask({ ...this.task });
-    
-    // Reset the form
-    this.task = { subject: '', workType: '', hours: 0, date: '', description: '' };
+    this.task = {
+      subject: '',
+      workType: '',
+      hours: 0,
+      date: '',
+      description: ''
+    };
+  }
+
+  calculateSummaries(): void {
+    this.totalHours = 0;
+    this.workTypeTotals = {};
+    this.subjectTotals = {};
+
+    for (const task of this.tasks) {
+      this.totalHours += task.hours;
+
+      if (!this.workTypeTotals[task.workType]) {
+        this.workTypeTotals[task.workType] = 0;
+      }
+      this.workTypeTotals[task.workType] += task.hours;
+
+      if (!this.subjectTotals[task.subject]) {
+        this.subjectTotals[task.subject] = 0;
+      }
+      this.subjectTotals[task.subject] += task.hours;
+    }
+  }
+
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj);
   }
 }

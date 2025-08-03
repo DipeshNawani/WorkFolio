@@ -11,11 +11,10 @@ import { AuthService } from '../auth.service';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
-
   returnUrl: string = '/dashboard';
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService
@@ -32,19 +31,32 @@ export class LoginComponent {
   }
 
   onLogin() {
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid) return;
+
+    const { email, password } = this.loginForm.value;
+
+    // First, try login via AuthService
+    const loginSuccess = this.authService.login(email, password);
+
+    if (loginSuccess) {
+      this.router.navigateByUrl(this.returnUrl);
       return;
     }
-    
-    const { email, password } = this.loginForm.value;
-    
-    if (this.authService.login(email, password)) {
-      // Login successful
-      this.router.navigateByUrl(this.returnUrl);
-    } else {
-      // Login failed
-      this.errorMessage = 'Invalid email or password or no user found. Please register first.';
+
+    // Fallback: Try localStorage check
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      if (user.email === email && user.password === password) {
+        alert('Login successful!');
+        localStorage.setItem('loggedInUsername', user.name);
+        this.router.navigate(['/landing']);
+        return;
+      }
     }
+
+    // Login failed
+    this.errorMessage = 'Invalid email or password or no user found. Please register first.';
   }
 
   goToRegister() {

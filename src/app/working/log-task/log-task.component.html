@@ -8,14 +8,14 @@
     <div>
       <label>Work Type</label>
       <select [(ngModel)]="task.workType">
-        <option disabled selected>Select work type</option>
-        <option>Lecture</option>
-        <option>Practical</option>
+        <option value="" disabled>Select work type</option>
+        <option value="Lecture">Lecture</option>
+        <option value="Practical">Practical</option>
       </select>
     </div>
     <div>
       <label>⏱ Hours Spent</label>
-      <input type="number" [(ngModel)]="task.hours" />
+      <input type="number" [(ngModel)]="task.hours" min="0" />
     </div>
     <div>
       <label>Date</label>
@@ -29,48 +29,53 @@
   <button (click)="addTask()">➕ Add Task</button>
 </div>
 
-<!-- Summary -->
+<!-- Summary Section -->
 <div class="summary">
   <div class="card">
     <h3>This Week's Total</h3>
     <p><strong>{{ totalHours }}h</strong></p>
     <p>{{ tasks.length }} tasks logged</p>
     <progress [value]="totalHours" max="40"></progress>
-    <p>Target: 40h per week</p>
+    <p>Target: 5h per week</p>
   </div>
+
   <div class="card">
     <h4>🎯 By Work Type</h4>
-    <div *ngFor="let type of Object.keys(workTypeTotals)">
-      <span [class]="type">{{ type }}</span>: {{ workTypeTotals[type] }}h
+    <div *ngFor="let type of objectKeys(workTypeTotals)">
+      <span class="tag">{{ type }}</span>: {{ workTypeTotals[type] }}h
     </div>
   </div>
+
   <div class="card">
     <h4>📈 By Subject</h4>
-    <div *ngFor="let subj of Object.keys(subjectTotals)">
+    <div *ngFor="let subj of objectKeys(subjectTotals)">
       <label>{{ subj }}</label>
       <progress [value]="subjectTotals[subj]" max="40"></progress> {{ subjectTotals[subj] }}h
     </div>
   </div>
 </div>
 
-<!-- Filters -->
+<!-- Filters Section -->
 <div class="filters">
   <h3>🔎 Filters</h3>
   <input placeholder="Search tasks..." [(ngModel)]="filter.search" />
+
   <select [(ngModel)]="filter.subject">
     <option value="">All subjects</option>
-    <option *ngFor="let subj of Object.keys(subjectTotals)">{{ subj }}</option>
+    <option *ngFor="let subj of objectKeys(subjectTotals)">{{ subj }}</option>
   </select>
+
   <select [(ngModel)]="filter.workType">
     <option value="">All types</option>
-    <option>Lecture</option>
-    <option>Practical</option>
+    <option value="Lecture">Lecture</option>
+    <option value="Practical">Practical</option>
   </select>
+
   <input type="date" [(ngModel)]="filter.fromDate" />
   <input type="date" [(ngModel)]="filter.toDate" />
 </div>
 
-<!-- Log Table -->
+<!-- Task Log Table -->
 <table class="log-table">
   <thead>
     <tr>
@@ -84,7 +89,7 @@
   <tbody>
     <tr *ngFor="let task of tasks">
       <td>{{ task.subject }}</td>
-      <td><span [class]="task.workType">{{ task.workType }}</span></td>
+      <td><span class="tag">{{ task.workType }}</span></td>
       <td>{{ task.hours }}h</td>
       <td>{{ task.date | date: 'mediumDate' }}</td>
       <td>{{ task.description || '-' }}</td>

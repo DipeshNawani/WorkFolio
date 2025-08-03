@@ -15,7 +15,7 @@ export class AdminSignInComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient // ✅ inject HttpClient
+    private http: HttpClient
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -26,19 +26,30 @@ export class AdminSignInComponent {
   onLogin() {
     const { username, password } = this.loginForm.value;
 
+    // Approach 1: Validate using external JSON file
     this.http.get<any>('assets/admin.json').subscribe(
       admin => {
         if (username === admin.username && password === admin.password) {
           alert('Admin login successful!');
-          this.router.navigate(['/admin']); // ✅ redirect to AdminWorkComponent
+          this.router.navigate(['/admin']);
         } else {
           this.errorMessage = 'Invalid admin credentials.';
         }
       },
       error => {
-        this.errorMessage = 'Error loading admin credentials.';
         console.error('Error fetching admin.json:', error);
+        this.errorMessage = 'Error loading admin credentials.';
       }
     );
+
+    // Optional fallback (if needed, comment out above block to use this)
+    /*
+    if (username === 'admin' && password === 'admin1234') {
+      alert('Admin login successful!');
+      this.router.navigate(['/admin']);
+    } else {
+      this.errorMessage = 'Invalid admin credentials.';
+    }
+    */
   }
 }
